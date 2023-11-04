@@ -1,4 +1,5 @@
 mod error;
+mod get_profile;
 mod interface;
 mod shared_object;
 mod task_manager;

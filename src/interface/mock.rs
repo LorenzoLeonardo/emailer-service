@@ -29,7 +29,7 @@ impl Mock {
             },
         }
     }
-
+    #[allow(dead_code)]
     pub fn set_mock_response(mut self, response: HttpResponse) -> Self {
         self.mock_response = response;
         self
