@@ -4,6 +4,7 @@ use async_trait::async_trait;
 use ipc_client::client::{error::Error, message::JsonValue, shared_object::SharedObject};
 use tokio::sync::mpsc::UnboundedSender;
 
+use crate::emailer::Emailer;
 use crate::{
     get_profile::{Profile, ProfileParam},
     interface::Interface,
@@ -37,7 +38,7 @@ where
         method: &str,
         param: Option<JsonValue>,
     ) -> Result<JsonValue, Error> {
-        log::trace!("Method: {} Param: {:?}", method, param);
+        log::debug!("Method: {} Param: {:?}", method, param);
         // TODO: Implement the shared object
         let result = match method {
             "getProfile" => {
@@ -61,6 +62,16 @@ where
                     JsonValue::HashMap(hash)
                 })
                 .map_err(|e| Error::new(JsonValue::String(e.to_string())))?
+            }
+            "sendMail" => {
+                let param =
+                    param.ok_or(Error::new(JsonValue::String("No parameter".to_string())))?;
+                let emailer = JsonValue::convert_to::<Emailer>(&param)?;
+                emailer
+                    .send_email()
+                    .await
+                    .map_err(|e| Error::new(JsonValue::String(e.to_string())))?;
+                JsonValue::String("success".to_string())
             }
             _ => {
                 todo!();

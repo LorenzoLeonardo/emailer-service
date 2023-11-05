@@ -1,3 +1,4 @@
+mod emailer;
 mod error;
 mod get_profile;
 mod interface;
@@ -35,7 +36,7 @@ pub fn setup_logger(level: LevelFilter) {
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> EmailResult<()> {
-    setup_logger(LevelFilter::Trace);
+    setup_logger(LevelFilter::Debug);
 
     let version = env!("CARGO_PKG_VERSION");
 

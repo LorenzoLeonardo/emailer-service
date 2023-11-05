@@ -10,10 +10,14 @@ use crate::{
     interface::Interface,
 };
 
-#[derive(Deref)]
+#[derive(Serialize, Deserialize, Deref, Debug)]
 pub struct SenderName(pub String);
-#[derive(Deref)]
+#[derive(Serialize, Deserialize, Deref, Debug)]
 pub struct SenderEmail(pub String);
+#[derive(Serialize, Deserialize, Deref, Debug)]
+pub struct RecipientName(pub String);
+#[derive(Serialize, Deserialize, Deref, Debug)]
+pub struct RecipientEmail(pub String);
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
