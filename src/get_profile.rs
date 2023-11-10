@@ -92,14 +92,14 @@ impl Profile {
         let sender_profile: Profile = serde_json::from_str(&body)?;
         let (name, email) = match sender_profile {
             Profile::Microsoft(profile) => {
-                log::debug!("Response: {:?}", profile);
+                log::trace!("Response: {:?}", profile);
                 (
                     SenderName(profile.display_name),
                     SenderEmail(profile.email_address),
                 )
             }
             Profile::Google(profile) => {
-                log::debug!("Response: {:?}", profile);
+                log::trace!("Response: {:?}", profile);
                 (SenderName(profile.given_name), SenderEmail(profile.email))
             }
         };

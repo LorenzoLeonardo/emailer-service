@@ -38,8 +38,8 @@ where
         method: &str,
         param: Option<JsonValue>,
     ) -> Result<JsonValue, Error> {
-        log::debug!("Method: {} Param: {:?}", method, param);
-        // TODO: Implement the shared object
+        log::trace!("Method: {} Param: {:?}", method, param);
+
         let result = match method {
             "getProfile" => {
                 let param =
@@ -61,16 +61,19 @@ where
                     );
                     JsonValue::HashMap(hash)
                 })
-                .map_err(|e| Error::new(JsonValue::String(e.to_string())))?
+                .map_err(|e| {
+                    log::error!("{e:?}");
+                    Error::new(JsonValue::String(e.to_string()))
+                })?
             }
             "sendMail" => {
                 let param =
                     param.ok_or(Error::new(JsonValue::String("No parameter".to_string())))?;
                 let emailer = JsonValue::convert_to::<Emailer>(&param)?;
-                emailer
-                    .send_email()
-                    .await
-                    .map_err(|e| Error::new(JsonValue::String(e.to_string())))?;
+                emailer.send_email().await.map_err(|e| {
+                    log::error!("{e:?}");
+                    Error::new(JsonValue::String(e.to_string()))
+                })?;
                 JsonValue::String("success".to_string())
             }
             _ => {
