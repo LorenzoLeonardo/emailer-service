@@ -1,6 +1,6 @@
 [package]
 name = "emailer-service"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -10,7 +10,7 @@ async-curl = "0.2"
 async-trait = "0.1"
 chrono = "0.4"
 curl-http-client = "0.2"
-derive-deref-rs = "0.1.1"
+derive-deref-rs = "0.1"
 fern = "0.6"
 http = "0.2"
 ipc-server = {git = "https://github.com/LorenzoLeonardo/ipc-server.git", branch = "master"}
