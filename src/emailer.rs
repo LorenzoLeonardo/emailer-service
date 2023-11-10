@@ -43,6 +43,7 @@ pub struct Emailer {
 impl Emailer {
     pub async fn send_email(self) -> EmailResult<()> {
         // Start of sending Email
+        log::info!("Sending email....");
         let mut message = MessageBuilder::new()
             .from((self.sender.name.to_string(), self.sender.email.to_string()))
             .to(self
@@ -58,7 +59,7 @@ impl Emailer {
             message = message.text_body(body);
         }
 
-        log::debug!("Message: {:?}", &message);
+        log::trace!("Message: {:?}", &message);
         let credentials = Credentials::new_xoauth2(
             self.sender.email.as_str(),
             self.access_token.secret().as_str(),
@@ -81,15 +82,13 @@ impl Emailer {
                         Ok(())
                     }
                     Err(err) => {
-                        log::info!("Sending Email failed!");
-                        log::error!("Error Details: {err:?}");
+                        log::error!("Sending Email failed! Details: {err:?}");
                         Err(EmailError::MailSend(err.to_string()))
                     }
                 }
             }
             Err(err) => {
-                log::error!("SMTP XOAUTH2 Credentials rejected!");
-                log::error!("Error Details: {err:?}");
+                log::error!("SMTP XOAUTH2 Credentials rejected! Details: {err:?}");
                 Err(EmailError::MailSend(err.to_string()))
             }
         }

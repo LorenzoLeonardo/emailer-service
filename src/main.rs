@@ -34,9 +34,15 @@ pub fn setup_logger(level: LevelFilter) {
         });
 }
 
+#[cfg(debug_assertions)]
+const LOG_LEVEL: log::LevelFilter = log::LevelFilter::Trace;
+
+#[cfg(not(debug_assertions))]
+const LOG_LEVEL: log::LevelFilter = log::LevelFilter::Info;
+
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> EmailResult<()> {
-    setup_logger(LevelFilter::Debug);
+    setup_logger(LOG_LEVEL);
 
     let version = env!("CARGO_PKG_VERSION");
 
