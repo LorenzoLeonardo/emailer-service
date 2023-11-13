@@ -15,19 +15,7 @@ use crate::{
     interface::production::Production, shared_object::EmailerObject, task_manager::TaskManager,
 };
 
-pub fn setup_logger() {
-    let level = std::env::var(ENV_LOGGER)
-        .map(|var| match var.to_lowercase().as_str() {
-            "trace" => log::LevelFilter::Trace,
-            "debug" => log::LevelFilter::Debug,
-            "info" => log::LevelFilter::Info,
-            "warn" => log::LevelFilter::Warn,
-            "error" => log::LevelFilter::Error,
-            "off" => log::LevelFilter::Off,
-            _ => log::LevelFilter::Info,
-        })
-        .unwrap_or_else(|_| log::LevelFilter::Info);
-
+fn setup_logger(level: log::LevelFilter) {
     fern::Dispatch::new()
         .format(|out, message, record| {
             out.finish(format_args!(
@@ -49,7 +37,18 @@ pub fn setup_logger() {
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> EmailResult<()> {
-    setup_logger();
+    let level = std::env::var(ENV_LOGGER)
+        .map(|var| match var.to_lowercase().as_str() {
+            "trace" => log::LevelFilter::Trace,
+            "debug" => log::LevelFilter::Debug,
+            "info" => log::LevelFilter::Info,
+            "warn" => log::LevelFilter::Warn,
+            "error" => log::LevelFilter::Error,
+            "off" => log::LevelFilter::Off,
+            _ => log::LevelFilter::Info,
+        })
+        .unwrap_or_else(|_| log::LevelFilter::Info);
+    setup_logger(level);
 
     let version = env!("CARGO_PKG_VERSION");
 
