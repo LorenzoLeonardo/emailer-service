@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use curl_http_client::collector::Collector;
 use http::header::InvalidHeaderValue;
 use serde::{Deserialize, Serialize};
 
@@ -24,8 +25,8 @@ impl Display for EmailError {
     }
 }
 
-impl From<curl_http_client::error::Error> for EmailError {
-    fn from(value: curl_http_client::error::Error) -> Self {
+impl From<curl_http_client::error::Error<Collector>> for EmailError {
+    fn from(value: curl_http_client::error::Error<Collector>) -> Self {
         EmailError::Curl(value.to_string())
     }
 }
