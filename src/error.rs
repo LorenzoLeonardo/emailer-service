@@ -10,6 +10,7 @@ pub enum EmailError {
     Http(String),
     MailSend(String),
     Serde(String),
+    IpcClient(String),
 }
 
 impl std::error::Error for EmailError {}
@@ -21,6 +22,7 @@ impl Display for EmailError {
             EmailError::MailSend(err) => write!(f, "{}", err),
             EmailError::Http(err) => write!(f, "{}", err),
             EmailError::Serde(err) => write!(f, "{}", err),
+            EmailError::IpcClient(err) => write!(f, "{}", err),
         }
     }
 }
@@ -43,4 +45,15 @@ impl From<serde_json::Error> for EmailError {
     }
 }
 
+impl From<json_elem::error::Error> for EmailError {
+    fn from(e: json_elem::error::Error) -> Self {
+        EmailError::Serde(e.to_string())
+    }
+}
+
+impl From<ipc_client::client::error::Error> for EmailError {
+    fn from(e: ipc_client::client::error::Error) -> Self {
+        EmailError::IpcClient(e.to_string())
+    }
+}
 pub type EmailResult<T> = Result<T, EmailError>;
