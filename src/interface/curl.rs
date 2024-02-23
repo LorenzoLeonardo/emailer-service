@@ -23,8 +23,9 @@ impl Curl {
         log::debug!("Request Method: {}", request.method);
         log::debug!("Request Body: {:?}", request.body);
 
-        let response = HttpClient::new(self.actor_handle.clone(), Collector::Ram(Vec::new()))
+        let response = HttpClient::new(Collector::RamAndHeaders(Vec::new(), Vec::new()))
             .request(request)?
+            .nonblocking(self.actor_handle.clone())
             .perform()
             .await?;
 
